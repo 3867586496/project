@@ -1,75 +1,131 @@
 #include<iostream>
 #include<string>
+#ifdef _WIN32
 #include<windows.h>
+#endif
 #include<fstream>
-#include<limits>
+#include<thread>
+#include<chrono>
+//传入参数是毫秒
+int autoPlayTime=1000;
+
+void sleep(int milliseconds){
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+};
+
 void welcome(){
-    std::cout<<"欢迎使用文本查看器0.0.1"<<std::endl;
+    std::cout<<"欢迎使用文本查看器0.1.1"<<std::endl;
 }
 
 void WelcomeMenu(){
     std::cout<<"1.查看文本"<<std::endl;
-    std::cout<<"2.退出"<<std::endl;
+    std::cout<<"2.设置"<<std::endl;
+    std::cout<<"3.退出"<<std::endl;
 }
 
 void ChooseDisplayWayMenu(){
     std::cout<<"1.整个查看"<<std::endl;
     std::cout<<"2.逐行查看（每回车一次看一行）"<<std::endl;
+    std::cout<<"3.自动播放（按时间播放每一行）"<<std::endl;
 };
+
+void SettingMenu(){
+    std::cout<<"1.改变字体颜色(未实装)"<<std::endl;
+    std::cout<<"2.改变背景颜色(未实装)"<<std::endl;
+}
+
+void ShowColorCode(){
+
+}
 
 std::ifstream ReadTextFile(){
     std::cout<<"请输入路径："<<std::endl;
 
     std::string path_str;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     getline(std::cin,path_str);
 
     std::ifstream inputTextFile(path_str.c_str());
     return inputTextFile;
 }
 
+void ChooseDisplayWayFunction(){
+    std::ifstream inputTextFile= ReadTextFile();
+    if(!inputTextFile){
+        std::cout<<"文件打开失败，请检查文件路径"<<std::endl;
+        return;
+    }
+    while(1){
+        ChooseDisplayWayMenu();
+
+        std::string operation;
+        std::cout<<"请输入查看方式："<<std::endl;
+        getline(std::cin,operation);
+
+        std::string text;
+        if(operation=="1"){
+
+            while(getline(inputTextFile,text)){
+                std::cout<<text<<std::endl;
+            }
+            inputTextFile.close();
+            break;
+        }
+        
+        else if(operation=="2"){
+            while(getline(inputTextFile,text)){
+                std::cout<<text<<std::endl;
+                std::cin.get();
+            }
+            inputTextFile.close();
+            break;
+        }
+        else if(operation=="3"){
+            while(getline(inputTextFile,text)){
+                std::cout<<text<<std::endl;
+                sleep(autoPlayTime);
+            }
+            inputTextFile.close();
+            break;
+        }
+        else{
+            std::cout<<"无效操作"<<std::endl;
+        }
+    }
+}
+
+
+
+void ReadConfig(){
+
+}
+
 int main(){
     //解决乱码
+    #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
+    #endif
     welcome();
     //主循环
     while(1){
         WelcomeMenu();
         //输入
         std::string operation;
-        std::cin>>operation;
+        getline(std::cin,operation);
 
         if(operation=="1"){
-            std::ifstream inputTextFile= ReadTextFile();
-            while(1){
-                ChooseDisplayWayMenu();
-
-                std::string operation;
-                std::cout<<"请输入查看方式："<<std::endl;
-                getline(std::cin,operation);
-
-                std::string text;
-                if(operation=="1"){
-
-                    while(getline(inputTextFile,text)){
-                        std::cout<<text<<std::endl;
-                    }
-                    break;
-                }
-                else if(operation=="2"){
-                    while(getline(inputTextFile,text)){
-                        std::cout<<text<<std::endl;
-                        std::cin.get();
-                    }
-                    break;
-                }
-                else{
-                    std::cout<<"无效操作"<<std::endl;
-                }
-            }
-            
+            ChooseDisplayWayFunction();
         }
         else if(operation=="2"){
+                    SettingMenu();
+
+                    std::string operation;
+                    std::cout<<"请输入操作："<<std::endl;
+                    getline(std::cin,operation);
+                    if(operation=="1"){
+
+                    }
+        }
+        else if(operation=="3"){
             return 0;
         }
         else{
