@@ -6,15 +6,42 @@
 #include<fstream>
 #include<thread>
 #include<chrono>
-//传入参数是毫秒
-int autoPlayTime=1000;
+#include<map>
+class Config{
+    public:
+    std::map<std::string,int> config_dict;
+    void ReadConfig(std::map<std::string,int>* map){
+        std::ifstream ConfigFile("config.ini");
+        if(!ConfigFile){
+            std::cout<<"配置文件读取失败"<<std::endl;
+            return;
+        }
+        std::string text;
+        while(getline(ConfigFile,text)){
+            size_t index=text.find("=");
+            if(index==-1){
+                continue;
+            }
+            (*map)[text.substr(0,index)]=std::stoi(text.substr(index+1));
+        }
+        ConfigFile.close();
+    }
+    int ReturnConfigValue(std::string key){
+        return config_dict[key];
+    }
+    Config(){
+        ReadConfig(&config_dict);
+    }
+};
 
+int autoPlayTime=1000;
+//传入参数是毫秒
 void sleep(int milliseconds){
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 };
 
 void welcome(){
-    std::cout<<"欢迎使用文本查看器0.1.1"<<std::endl;
+    std::cout<<"欢迎使用文本查看器0.1.2"<<std::endl;
 }
 
 void WelcomeMenu(){
@@ -48,7 +75,7 @@ std::ifstream ReadTextFile(){
     return inputTextFile;
 }
 
-void ChooseDisplayWayFunction(){
+void ChooseDisplayWayFunction(Config config){
     std::ifstream inputTextFile= ReadTextFile();
     if(!inputTextFile){
         std::cout<<"文件打开失败，请检查文件路径"<<std::endl;
@@ -82,7 +109,7 @@ void ChooseDisplayWayFunction(){
         else if(operation=="3"){
             while(getline(inputTextFile,text)){
                 std::cout<<text<<std::endl;
-                sleep(autoPlayTime);
+                sleep(config.ReturnConfigValue("autoPlayTime"));
             }
             inputTextFile.close();
             break;
@@ -95,15 +122,12 @@ void ChooseDisplayWayFunction(){
 
 
 
-void ReadConfig(){
-
-}
-
 int main(){
     //解决乱码
     #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     #endif
+    Config config;
     welcome();
     //主循环
     while(1){
@@ -113,7 +137,7 @@ int main(){
         getline(std::cin,operation);
 
         if(operation=="1"){
-            ChooseDisplayWayFunction();
+            ChooseDisplayWayFunction(config);
         }
         else if(operation=="2"){
                     SettingMenu();
