@@ -11,7 +11,7 @@ class Config{
     public:
     std::map<std::string,int> config_dict;
     void ReadConfig(std::map<std::string,int>* map){
-        std::ifstream ConfigFile("config.ini");
+        std::ifstream ConfigFile("datas/config.ini");
         if(!ConfigFile){
             std::cout<<"配置文件读取失败"<<std::endl;
             return;
@@ -28,6 +28,17 @@ class Config{
     }
     int ReturnConfigValue(std::string key){
         return config_dict[key];
+    }
+    void WriteConfig(std::map<std::string,int> map){
+        std::ofstream ConfigOut("datas/config.ini",std::ios::out);
+        if(!ConfigOut){
+            std::cout<<"配置文件写入失败"<<std::endl;
+            return;
+        }
+        for(std::pair<std::string,int> config_pair :map){
+            ConfigOut<<config_pair.first<<"="<<config_pair.second<<std::endl;
+        }
+        ConfigOut.close();
     }
     Config(){
         ReadConfig(&config_dict);
