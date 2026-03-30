@@ -52,7 +52,7 @@ void sleep(int milliseconds){
 };
 
 void welcome(){
-    std::cout<<"欢迎使用文本查看器0.1.2"<<std::endl;
+    std::cout<<"欢迎使用文本查看器0.1.3"<<std::endl;
 }
 
 void WelcomeMenu(){
