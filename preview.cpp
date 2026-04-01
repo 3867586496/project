@@ -8,6 +8,34 @@
 #include<chrono>
 #include<map>
 #include<limits>
+#include<vector>
+#include<ctime>
+class Date{
+    public:
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+    int second;
+    void GetCurrentDate(int &year,int &month,int &day,int &hour,int &minute,int &second){
+        time_t t=time(0)+3600*8;//为了实现北京时间
+        tm* now=gmtime(&t);
+
+        year=now->tm_year+1900;
+        month=now->tm_mon+1;
+        day=now->tm_mday;
+        hour=now->tm_hour;
+        minute=now->tm_min;
+        second=now->tm_sec;
+
+        delete now;
+    }
+    Date(){
+        GetCurrentDate(year,month,day,hour,minute,second);
+    }
+};
+
 class Config{
     public:
     std::map<std::string,int> config_dict;
@@ -80,7 +108,11 @@ class Menu{
 };
 
 class Log{
-    
+    public:
+    std::vector<std::string> Log_List;
+    void ReadLog(){
+        
+    }
 };
 //传入参数是毫秒
 void sleep(int milliseconds){
