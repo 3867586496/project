@@ -191,6 +191,8 @@ int main(){
             SettingFunction(config,menu);
         }
         else if(operation=="3"){
+            delete config;
+            delete menu;
             return 0;
         }
         else{
