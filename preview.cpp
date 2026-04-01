@@ -78,6 +78,10 @@ class Menu{
         //std::cout<<"2."<<std::endl;
     }
 };
+
+class Log{
+    
+};
 //传入参数是毫秒
 void sleep(int milliseconds){
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
@@ -97,14 +101,14 @@ std::ifstream ReadTextFile(){
     return inputTextFile;
 }
 
-void ChooseDisplayWayFunction(Config config,Menu menu){
+void ChooseDisplayWayFunction(Config* config,Menu* menu){
     std::ifstream inputTextFile= ReadTextFile();
     if(!inputTextFile){
         std::cout<<"文件打开失败，请检查文件路径"<<std::endl;
         return;
     }
     while(1){
-        menu.ChooseDisplayWayMenu();
+        menu->ChooseDisplayWayMenu();
 
         std::string operation;
         std::cout<<"请输入查看方式："<<std::endl;
@@ -131,7 +135,7 @@ void ChooseDisplayWayFunction(Config config,Menu menu){
         else if(operation=="3"){
             while(getline(inputTextFile,text)){
                 std::cout<<text<<std::endl;
-                sleep(config.ReturnConfigValue("autoPlayTime"));
+                sleep(config->ReturnConfigValue("autoPlayTime"));
             }
             inputTextFile.close();
             break;
@@ -142,8 +146,8 @@ void ChooseDisplayWayFunction(Config config,Menu menu){
     }
 }
 
-void SettingFunction(Config &config,Menu menu){
-    menu.SettingMenu();
+void SettingFunction(Config* config,Menu* menu){
+    menu->SettingMenu();
 
     std::string operation;
     std::cout<<"请输入操作："<<std::endl;
@@ -156,7 +160,7 @@ void SettingFunction(Config &config,Menu menu){
             std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
             std::cout<<"输入范围应该为1-10000"<<std::endl;
         }
-        config.ChangeValue(config.config_dict,"autoPlayTime",inputMillisecond);
+        config->ChangeValue(config->config_dict,"autoPlayTime",inputMillisecond);
         std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
         std::cout<<"成功！"<<std::endl;
     }
@@ -170,12 +174,12 @@ int main(){
     #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     #endif
-    Config config;
-    Menu menu;
-    menu.welcome();
+    Config* config=new Config;
+    Menu* menu=new Menu;
+    menu->welcome();
     //主循环
     while(1){
-        menu.WelcomeMenu();
+        menu->WelcomeMenu();
         //输入
         std::string operation;
         getline(std::cin,operation);
