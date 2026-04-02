@@ -86,7 +86,7 @@ class Config{
 class Menu{
     public:
     void welcome(){
-        std::cout<<"欢迎使用文本查看器0.2.0"<<std::endl;
+        std::cout<<"欢迎使用文本查看器0.3.0"<<std::endl;
     }
 
     void WelcomeMenu(){
@@ -110,6 +110,44 @@ class Menu{
 class Log{
     public:
     std::vector<std::string> Log_List;
+
+    std::string GenerateChangeSettingType(std::string changeType,int beforeValue,int currentValue){
+        return "change "+changeType+" "+"from "+std::to_string(beforeValue)+" "+"to "+std::to_string(currentValue);
+    }
+
+    std::string GenerateLog(std::string type){
+        Date* date=new Date();
+        std::string Log;
+        Log="["
+        +std::to_string(date->year)
+        +"."
+        +std::to_string(date->month)
+        +"."
+        +std::to_string(date->day)
+        +"|"
+        +std::to_string(date->hour)
+        +":"
+        +std::to_string(date->minute)
+        +":"
+        +std::to_string(date->second)
+        +"]"
+        +type;
+        delete date;
+        return Log;
+    }
+
+    void AddLog(std::string log){
+        std::ifstream LogIn("datas/log.txt");
+        if(!LogIn){
+            std::ofstream LogOut("datas/log.txt");
+            LogOut.close();
+        }
+        std::ofstream LogOut("datas/log.txt",std::ios::app);
+        LogOut<<log<<std::endl;
+        LogOut.close();
+        
+    }
+
     void ReadLog(){
         
     }
@@ -187,14 +225,22 @@ void SettingFunction(Config* config,Menu* menu){
     if(operation=="1"){
         std::cout<<"请输入你要改变的值（单位毫秒）";
         int inputMillisecond;
+        std::string valueName="autoPlayTime";
+
         while(!(std::cin>>inputMillisecond)||inputMillisecond<=1||inputMillisecond>10000){
             std::cin.clear();
             std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
             std::cout<<"输入范围应该为1-10000"<<std::endl;
         }
-        config->ChangeValue(config->config_dict,"autoPlayTime",inputMillisecond);
+        int oldValue=config->ReturnConfigValue(valueName);
+
+        config->ChangeValue(config->config_dict,valueName,inputMillisecond);
         std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
         std::cout<<"成功！"<<std::endl;
+
+        Log* log=new Log();
+        log->AddLog(log->GenerateLog(log->GenerateChangeSettingType(valueName,oldValue,config->ReturnConfigValue(valueName))));
+        delete log;
     }
     else{
         std::cout<<"无效操作"<<std::endl;
