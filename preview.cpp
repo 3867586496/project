@@ -11,6 +11,7 @@
 #include<vector>
 #include<ctime>
 #include<filesystem>
+#include<typeinfo>
 class Date{
     public:
     int year;
@@ -105,12 +106,23 @@ class Menu{
     void SettingMenu(){
         std::cout<<"1.改变自动整行播放时间"<<std::endl;
         std::cout<<"2.改变单字播放时间"<<std::endl;
+        std::cout<<"2.改变整面查看行数"<<std::endl;
     }
 };
 
 class Log{
     public:
     std::vector<std::string> Log_List;
+
+    template<class Type> std::string GenerateConvertErrorType(Type value,std::string convertType,std::string errorType){
+        std::string typeName=typeid(value).name();
+        return typeName+" "+value+" convert to "+convertType+" error,the reason is "+errorType;
+    }
+
+    template<class Type> std::string GenerateConvertErrorType(Type value,std::string convertType,const char errorType){
+        std::string typeName=typeid(value).name();
+        return typeName+" "+value+" convert to "+convertType+" error,the reason is "+errorType;
+    }
 
     std::string GenerateReadFileType(std::string path){
         return "Read "+path;
@@ -162,9 +174,15 @@ class Log{
 void sleep(int milliseconds){
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 };
-
-void ShowColorCode(){
-
+//包含关闭文件
+std::vector<std::string> GetAllFileText(std::ifstream& inputTextFile){
+    std::vector<std::string> allText;
+    std::string text;
+    while(getline(inputTextFile,text)){
+        allText.push_back(text);
+    }
+    inputTextFile.close();
+    return allText;
 }
 
 void ChooseDisplayWayFunction(Config* config,Menu* menu){
@@ -210,7 +228,8 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
             }
             inputTextFile.close();
             break;
-        }else if(operation=="4"){
+        }
+        else if(operation=="4"){
             while(getline(inputTextFile,text)){
                 for(char character:text){
                     std::cout<<character;
@@ -221,10 +240,84 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
             inputTextFile.close();
             break;
         }
+        else if(operation=="5"){
+            std::vector<std::string> allText=GetAllFileText(inputTextFile);
+            unsigned int allPage;
+            if(allText.size()%config->ReturnConfigValue("linePerPage")==0){
+                allPage=allText.size()/config->ReturnConfigValue("linePerPage");
+            }else{
+                allPage=allText.size()/config->ReturnConfigValue("linePerPage")+1;
+            }
+            unsigned int currentPage=1;
+            while(1){
+                for(int i=0;i<config->ReturnConfigValue("linePerPage");i++){
+                    if((currentPage-1)*config->ReturnConfigValue("linePerPage")+i>=allText.size()){
+                        break;
+                    }
+                    std::cout<<allText[(currentPage-1)*config->ReturnConfigValue("linePerPage")+i]<<std::endl;
+
+                }
+                std::cout<<"当前处于第"<<currentPage<<"页，共有"<<allPage<<"页"<<std::endl;
+                std::cout<<"请输入您要跳转的页数（输入0退出，直接换行为下一页）："<<std::endl;
+                std::string inputPage;
+                unsigned int turnPage=1;
+                bool isSuccess=0;
+                while(1){
+                    std::getline(std::cin,inputPage);
+                    if(inputPage==""){
+                        if(currentPage==allPage){
+                            std::cout<<"最后一面了"<<std::endl;
+                            break;
+                        }
+                        currentPage++;
+                        break;
+                    }
+                    try{
+                        turnPage=std::stoi(inputPage);
+                        if(turnPage<0){
+                            throw std::invalid_argument("too small");
+                        }
+                        if(turnPage>allPage){
+                            throw std::invalid_argument("too large");
+                        }
+                        isSuccess=1;
+                    }
+                    catch(std::invalid_argument& error){
+                        Log* log=new Log();
+                        log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int",error.what())));
+                        delete log;
+                        std::cout<<"输入无效"<<std::endl;
+                    }
+                    catch(std::out_of_range& error){
+                        Log* log=new Log();
+                        log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int","out_of_range")));
+                        delete log;
+                        std::cout<<"输入无效"<<std::endl;
+                    }
+                    // catch(const char* error){
+                    //     Log* log=new Log();
+                    //     log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int",error)));
+                    //     delete log;
+                    //     std::cout<<"输入无效"<<std::endl;
+                    // }
+                    if(isSuccess){
+                        currentPage=turnPage;
+                        if(currentPage==0){
+                            goto EXIT;
+                        }
+                        break;
+                    }
+                    
+                    
+                }
+                    
+            }
+        }
         else{
             std::cout<<"无效操作"<<std::endl;
         }
     }
+    EXIT:
     std::filesystem::path absolutePath=std::filesystem::absolute(path_str.c_str());
     
     Log* log=new Log();
@@ -234,22 +327,57 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
 
 //范围为包括min和max
 void ChangeIntValue(Config* config,Menu* menu,std::string valueName,int min,int max){
-        int value;
-
-        while(!(std::cin>>value)||value<min||value>max){
-            std::cin.clear();
-            std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            std::cout<<"输入范围应该为"<<min<<"-"<<max<<std::endl;
+    int value;
+    bool isSuccess=0;
+    while(1){
+        value=-1;
+        std::string inputValue;
+        std::getline(std::cin,inputValue);
+        try{
+            value=std::stoi(inputValue);
+            if(value<min){
+                throw std::invalid_argument("too small");
+            }
+            if(value>max){
+                
+                throw std::invalid_argument("too large");
+            }
+            isSuccess=1;
+            break;
         }
+        catch(std::invalid_argument error){
+            Log* log=new Log();
+            log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int",error.what())));
+            delete log;
+            std::cout<<"输入范围应该为"<<min<<"-"<<max<<"的整数"<<std::endl;
+        }
+        // catch(const char* error){
+        //     Log* log=new Log();
+        //     log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int",error)));
+        //     delete log;
+        //     std::cout<<"输入范围应该为"<<min<<"-"<<max<<"的整数"<<std::endl;
+        // }
+        catch(std::out_of_range){
+            Log* log=new Log();
+            log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int","out_of_range")));
+            delete log;
+            std::cout<<"输入范围应该为"<<min<<"-"<<max<<"的整数"<<std::endl;
+        }
+        
+    }
+    if(isSuccess){
         int oldValue=config->ReturnConfigValue(valueName);
 
         config->ChangeValue(config->config_dict,valueName,value);
-        std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
         std::cout<<"成功！"<<std::endl;
 
         Log* log=new Log();
         log->AddLog(log->GenerateLog(log->GenerateChangeSettingType(valueName,oldValue,config->ReturnConfigValue(valueName))));
         delete log;
+    }else{
+        std::cout<<"失败"<<std::endl;
+    }
+    
 }
 
 void SettingFunction(Config* config,Menu* menu){
@@ -265,7 +393,10 @@ void SettingFunction(Config* config,Menu* menu){
     else if(operation=="2"){
         std::cout<<"请输入你要改变的值（单位毫秒）";
         ChangeIntValue(config,menu,"autoPlayCharacterTime",1,10000);
-
+    }
+    else if(operation=="3"){
+        std::cout<<"请输入你要改变的值（单位面数）";
+        ChangeIntValue(config,menu,"linePerPage",1,1000);
     }
     else{
         std::cout<<"无效操作"<<std::endl;

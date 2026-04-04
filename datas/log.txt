@@ -10,3 +10,27 @@
 [2026.4.4|19:39:34]change autoPlayLineTime from 3 to 123
 [2026.4.4|19:40:6]change autoPlayCharacterTime from 89 to 1
 [2026.4.4|20:0:45]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.4|23:34:43]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -1 convert to int error,the reason is too large
+[2026.4.4|23:45:11]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -2 convert to int error,the reason is too large
+[2026.4.4|23:45:39]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -565 convert to int error,the reason is too large
+[2026.4.4|23:46:44]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.4|23:53:39]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|0:1:55]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -1 convert to int error,the reason is too large
+[2026.4.5|0:2:1]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 123 convert to int error,the reason is too large
+[2026.4.5|0:2:6]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 123 convert to int error,the reason is too large
+[2026.4.5|0:2:7]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 123 convert to int error,the reason is too large
+[2026.4.5|0:7:12]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -1 convert to int error,the reason is too large
+[2026.4.5|0:13:54]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE w convert to int error,the reason is stoi
+[2026.4.5|0:15:23]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 124 convert to int error,the reason is too large
+[2026.4.5|0:15:33]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 144 convert to int error,the reason is too large
+[2026.4.5|0:15:38]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 56 convert to int error,the reason is too large
+[2026.4.5|0:15:41]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 44 convert to int error,the reason is too large
+[2026.4.5|0:17:44]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -1 convert to int error,the reason is too large
+[2026.4.5|0:17:44]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|0:19:56]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|0:21:18]Change autoPlayLineTime from 123 to 213
+[2026.4.5|0:23:3]Change autoPlayCharacterTime from 1 to 123
+[2026.4.5|0:23:54]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE 123123 convert to int error,the reason is too large
+[2026.4.5|0:23:57]Change autoPlayLineTime from 213 to 1
+[2026.4.5|0:26:54]Change linePerPage from 10 to 20
+[2026.4.5|0:27:5]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
