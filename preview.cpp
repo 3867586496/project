@@ -28,8 +28,6 @@ class Date{
         hour=now->tm_hour;
         minute=now->tm_min;
         second=now->tm_sec;
-
-        delete now;
     }
     Date(){
         GetCurrentDate(year,month,day,hour,minute,second);
@@ -142,6 +140,7 @@ class Log{
             std::ofstream LogOut("datas/log.txt");
             LogOut.close();
         }
+        LogIn.close();
         std::ofstream LogOut("datas/log.txt",std::ios::app);
         LogOut<<log<<std::endl;
         LogOut.close();
