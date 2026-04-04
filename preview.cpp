@@ -10,6 +10,7 @@
 #include<limits>
 #include<vector>
 #include<ctime>
+#include<filesystem>
 class Date{
     public:
     int year;
@@ -111,8 +112,12 @@ class Log{
     public:
     std::vector<std::string> Log_List;
 
+    std::string GenerateReadFileType(std::string path){
+        return "Read "+path;
+    }
+
     std::string GenerateChangeSettingType(std::string changeType,int beforeValue,int currentValue){
-        return "change "+changeType+" "+"from "+std::to_string(beforeValue)+" "+"to "+std::to_string(currentValue);
+        return "Change "+changeType+" "+"from "+std::to_string(beforeValue)+" "+"to "+std::to_string(currentValue);
     }
 
     std::string GenerateLog(std::string type){
@@ -162,18 +167,13 @@ void ShowColorCode(){
 
 }
 
-std::ifstream ReadTextFile(){
+void ChooseDisplayWayFunction(Config* config,Menu* menu){
     std::cout<<"请输入路径："<<std::endl;
 
     std::string path_str;
     getline(std::cin,path_str);
 
     std::ifstream inputTextFile(path_str.c_str());
-    return inputTextFile;
-}
-
-void ChooseDisplayWayFunction(Config* config,Menu* menu){
-    std::ifstream inputTextFile= ReadTextFile();
     if(!inputTextFile){
         std::cout<<"文件打开失败，请检查文件路径"<<std::endl;
         return;
@@ -225,6 +225,11 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
             std::cout<<"无效操作"<<std::endl;
         }
     }
+    std::filesystem::path absolutePath=std::filesystem::absolute(path_str.c_str());
+    
+    Log* log=new Log();
+    log->AddLog(log->GenerateLog(log->GenerateReadFileType(absolutePath.string())));
+    delete log;
 }
 
 //范围为包括min和max

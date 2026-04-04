@@ -9,3 +9,4 @@
 [2026.4.4|19:39:13]change autoPlayCharacterTime from 3 to 89
 [2026.4.4|19:39:34]change autoPlayLineTime from 3 to 123
 [2026.4.4|19:40:6]change autoPlayCharacterTime from 89 to 1
+[2026.4.4|20:0:45]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
