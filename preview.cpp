@@ -1,7 +1,7 @@
 #include<iostream>
 #include<string>
 #ifdef _WIN32
-#include<windows.h>
+    #include<windows.h>
 #endif
 #include<fstream>
 #include<thread>
@@ -84,7 +84,7 @@ class Config{
 class Menu{
     public:
     void welcome(){
-        std::cout<<"欢迎使用文本查看器0.3.0"<<std::endl;
+        std::cout<<"欢迎使用文本查看器0.3.1"<<std::endl;
     }
 
     void WelcomeMenu(){
@@ -97,11 +97,13 @@ class Menu{
         std::cout<<"1.整个查看"<<std::endl;
         std::cout<<"2.逐行查看（每回车一次看一行）"<<std::endl;
         std::cout<<"3.自动播放（按时间播放每一行）"<<std::endl;
+        std::cout<<"4.自动播放（按时间播放每一个字）"<<std::endl;
+        std::cout<<"5.逐页查看（未实装）"<<std::endl;
     };
 
     void SettingMenu(){
-        std::cout<<"1.改变自动播放时间"<<std::endl;
-        //std::cout<<"2."<<std::endl;
+        std::cout<<"1.改变自动整行播放时间"<<std::endl;
+        std::cout<<"2.改变单字播放时间"<<std::endl;
     }
 };
 
@@ -208,11 +210,41 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
             }
             inputTextFile.close();
             break;
+        }else if(operation=="4"){
+            while(getline(inputTextFile,text)){
+                for(char character:text){
+                    std::cout<<character;
+                    sleep(config->ReturnConfigValue("autoPlayWordTime"));
+                }
+                std::cout<<std::endl;
+            }
+            inputTextFile.close();
+            break;
         }
         else{
             std::cout<<"无效操作"<<std::endl;
         }
     }
+}
+
+//范围为包括min和max
+void ChangeIntValue(Config* config,Menu* menu,std::string valueName,int min,int max){
+        int value;
+
+        while(!(std::cin>>value)||value<min||value>max){
+            std::cin.clear();
+            std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+            std::cout<<"输入范围应该为"<<min<<"-"<<max<<std::endl;
+        }
+        int oldValue=config->ReturnConfigValue(valueName);
+
+        config->ChangeValue(config->config_dict,valueName,value);
+        std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+        std::cout<<"成功！"<<std::endl;
+
+        Log* log=new Log();
+        log->AddLog(log->GenerateLog(log->GenerateChangeSettingType(valueName,oldValue,config->ReturnConfigValue(valueName))));
+        delete log;
 }
 
 void SettingFunction(Config* config,Menu* menu){
@@ -223,23 +255,12 @@ void SettingFunction(Config* config,Menu* menu){
     getline(std::cin,operation);
     if(operation=="1"){
         std::cout<<"请输入你要改变的值（单位毫秒）";
-        int inputMillisecond;
-        std::string valueName="autoPlayTime";
+        ChangeIntValue(config,menu,"autoPlayLineTime",1,10000);
+    }
+    else if(operation=="2"){
+        std::cout<<"请输入你要改变的值（单位毫秒）";
+        ChangeIntValue(config,menu,"autoPlayCharacterTime",1,10000);
 
-        while(!(std::cin>>inputMillisecond)||inputMillisecond<=1||inputMillisecond>10000){
-            std::cin.clear();
-            std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            std::cout<<"输入范围应该为1-10000"<<std::endl;
-        }
-        int oldValue=config->ReturnConfigValue(valueName);
-
-        config->ChangeValue(config->config_dict,valueName,inputMillisecond);
-        std::cin.std::istream::ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        std::cout<<"成功！"<<std::endl;
-
-        Log* log=new Log();
-        log->AddLog(log->GenerateLog(log->GenerateChangeSettingType(valueName,oldValue,config->ReturnConfigValue(valueName))));
-        delete log;
     }
     else{
         std::cout<<"无效操作"<<std::endl;

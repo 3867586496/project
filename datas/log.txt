@@ -5,3 +5,7 @@
 [2026.4.4|13:9:55]change autoPlayTime from 12 to 345
 [2026.4.4|13:9:59]change autoPlayTime from 345 to 234
 [2026.4.4|13:10:7]change autoPlayTime from 234 to 2
+[2026.4.4|13:46:23]change autoPlayTime from 2 to 3
+[2026.4.4|19:39:13]change autoPlayCharacterTime from 3 to 89
+[2026.4.4|19:39:34]change autoPlayLineTime from 3 to 123
+[2026.4.4|19:40:6]change autoPlayCharacterTime from 89 to 1
