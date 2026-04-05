@@ -12,6 +12,8 @@
 #include<ctime>
 #include<filesystem>
 #include<typeinfo>
+#define ERROR_INFO "[info]"
+#define ERROR_WARNING "[warning]"
 class Date{
     public:
     int year;
@@ -86,7 +88,7 @@ class Config{
 class Menu{
     public:
     void welcome(){
-        std::cout<<"欢迎使用文本查看器0.3.1"<<std::endl;
+        std::cout<<"欢迎使用文本查看器0.4.1"<<std::endl;
     }
 
     void WelcomeMenu(){
@@ -100,13 +102,13 @@ class Menu{
         std::cout<<"2.逐行查看（每回车一次看一行）"<<std::endl;
         std::cout<<"3.自动播放（按时间播放每一行）"<<std::endl;
         std::cout<<"4.自动播放（按时间播放每一个字）"<<std::endl;
-        std::cout<<"5.逐页查看（未实装）"<<std::endl;
+        std::cout<<"5.逐页查看"<<std::endl;
     };
 
     void SettingMenu(){
         std::cout<<"1.改变自动整行播放时间"<<std::endl;
         std::cout<<"2.改变单字播放时间"<<std::endl;
-        std::cout<<"2.改变整面查看行数"<<std::endl;
+        std::cout<<"3.改变整面查看行数"<<std::endl;
     }
 };
 
@@ -132,7 +134,7 @@ class Log{
         return "Change "+changeType+" "+"from "+std::to_string(beforeValue)+" "+"to "+std::to_string(currentValue);
     }
 
-    std::string GenerateLog(std::string type){
+    std::string GenerateLog(std::string type,std::string level,int line){
         Date* date=new Date();
         std::string Log;
         Log="["
@@ -148,6 +150,10 @@ class Log{
         +":"
         +std::to_string(date->second)
         +"]"
+        +"[line="
+        +std::to_string(line)
+        +"]"
+        +level
         +type;
         delete date;
         return Log;
@@ -284,13 +290,13 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
                     }
                     catch(std::invalid_argument& error){
                         Log* log=new Log();
-                        log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int",error.what())));
+                        log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int",error.what()),ERROR_WARNING,__LINE__));
                         delete log;
                         std::cout<<"输入无效"<<std::endl;
                     }
                     catch(std::out_of_range& error){
                         Log* log=new Log();
-                        log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int","out_of_range")));
+                        log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputPage,"int","out_of_range"),ERROR_WARNING,__LINE__));
                         delete log;
                         std::cout<<"输入无效"<<std::endl;
                     }
@@ -308,7 +314,6 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
                         break;
                     }
                     
-                    
                 }
                     
             }
@@ -321,7 +326,7 @@ void ChooseDisplayWayFunction(Config* config,Menu* menu){
     std::filesystem::path absolutePath=std::filesystem::absolute(path_str.c_str());
     
     Log* log=new Log();
-    log->AddLog(log->GenerateLog(log->GenerateReadFileType(absolutePath.string())));
+    log->AddLog(log->GenerateLog(log->GenerateReadFileType(absolutePath.string()),ERROR_INFO,__LINE__));
     delete log;
 }
 
@@ -347,7 +352,7 @@ void ChangeIntValue(Config* config,Menu* menu,std::string valueName,int min,int 
         }
         catch(std::invalid_argument error){
             Log* log=new Log();
-            log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int",error.what())));
+            log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int",error.what()),ERROR_WARNING,__LINE__));
             delete log;
             std::cout<<"输入范围应该为"<<min<<"-"<<max<<"的整数"<<std::endl;
         }
@@ -359,7 +364,7 @@ void ChangeIntValue(Config* config,Menu* menu,std::string valueName,int min,int 
         // }
         catch(std::out_of_range){
             Log* log=new Log();
-            log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int","out_of_range")));
+            log->AddLog(log->GenerateLog(log->GenerateConvertErrorType(inputValue,"int","out_of_range"),ERROR_WARNING,__LINE__));
             delete log;
             std::cout<<"输入范围应该为"<<min<<"-"<<max<<"的整数"<<std::endl;
         }
@@ -372,7 +377,7 @@ void ChangeIntValue(Config* config,Menu* menu,std::string valueName,int min,int 
         std::cout<<"成功！"<<std::endl;
 
         Log* log=new Log();
-        log->AddLog(log->GenerateLog(log->GenerateChangeSettingType(valueName,oldValue,config->ReturnConfigValue(valueName))));
+        log->AddLog(log->GenerateLog(log->GenerateChangeSettingType(valueName,oldValue,config->ReturnConfigValue(valueName)),ERROR_INFO,__LINE__));
         delete log;
     }else{
         std::cout<<"失败"<<std::endl;

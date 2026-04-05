@@ -34,3 +34,14 @@
 [2026.4.5|0:23:57]Change autoPlayLineTime from 213 to 1
 [2026.4.5|0:26:54]Change linePerPage from 10 to 20
 [2026.4.5|0:27:5]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|11:7:41]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|11:7:47]Change autoPlayLineTime from 1 to 123
+[2026.4.5|11:7:51]Change autoPlayCharacterTime from 123 to 12
+[2026.4.5|11:8:18]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|11:9:38][warning]NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE -1 convert to int error,the reason is too large
+[2026.4.5|11:9:41][info]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|11:9:56][info]Change autoPlayCharacterTime from 12 to 1
+[2026.4.5|11:10:14][info]Change linePerPage from 20 to 10
+[2026.4.5|11:12:48][line=154][info]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
+[2026.4.5|11:12:52][line=154][info]Change linePerPage from 10 to 10
+[2026.4.5|11:13:49][line=154][info]Read C:\Users\Administrator.DESKTOP-JAHHOFH\Desktop\project\preview.cpp
